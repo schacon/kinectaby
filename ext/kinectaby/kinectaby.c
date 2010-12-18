@@ -40,6 +40,21 @@ static VALUE rb_freenect_context_num_devices(VALUE self)
 	return INT2FIX(freenect_num_devices(context));
 }
 
+static VALUE rb_freenect_context_open_device(VALUE self, VALUE device_num)
+{
+	freenect_context *context;
+	freenect_device  *device;
+	int error;
+
+	Data_Get_Struct(self, freenect_context, context);
+
+	error = freenect_open_device(context, &device, FIX2INT(device_num));
+	if (error < 0)
+		rb_raise(rb_eRuntimeError, "freenect device open failed");
+
+	return Data_Wrap_Struct(rb_cKinectabyDevice, NULL, NULL, device);
+}
+
 static VALUE rb_freenect_context_shutdown(VALUE self)
 {
 	freenect_context *context;
@@ -54,6 +69,24 @@ static VALUE rb_freenect_context_shutdown(VALUE self)
 	return Qtrue;
 }
 
+/*
+ * Kinectaby Device
+ */
+static VALUE rb_freenect_device_close(VALUE self)
+{
+	freenect_device *device;
+	int error;
+
+	Data_Get_Struct(self, freenect_device, device);
+
+	error = freenect_close_device(device);
+	if (error < 0)
+		rb_raise(rb_eRuntimeError, "freenect device close failed");
+
+	return Qtrue;
+}
+
+
 void Init_kinectaby()
 {
 	rb_mKinectaby = rb_define_module("Kinectaby");
@@ -65,7 +98,14 @@ void Init_kinectaby()
 	rb_define_alloc_func(rb_cKinectabyContext, rb_freenect_context_allocate);
 	rb_define_method(rb_cKinectabyContext, "initialize", rb_freenect_context_init, 0);
 	rb_define_method(rb_cKinectabyContext, "num_devices", rb_freenect_context_num_devices, 0);
+	rb_define_method(rb_cKinectabyContext, "open_device", rb_freenect_context_open_device, 1);
 	rb_define_method(rb_cKinectabyContext, "shutdown", rb_freenect_context_shutdown, 0);
+
+	/*
+	 * Device
+	 */
+	rb_cKinectabyDevice = rb_define_class_under(rb_mKinectaby, "Device", rb_cObject);
+	rb_define_method(rb_cKinectabyDevice, "close", rb_freenect_device_close, 0);
 
 	/* Constants */
 	rb_define_const(rb_mKinectaby, "LED_OFF", INT2FIX(LED_OFF));

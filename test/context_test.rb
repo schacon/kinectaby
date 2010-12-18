@@ -17,4 +17,16 @@ context "Kinectaby::Context stuff" do
     assert_equal 0, Kinectaby::LED_OFF
     assert_equal 6, Kinectaby::LED_BLINK_RED_YELLOW
   end
+
+  test "Get a device" do
+    device = @context.open_device(0)
+    device.close
+  end
+
+  test "Get no device" do
+    assert_raise RuntimeError do
+      device = @context.open_device(1)
+    end
+  end
+
 end
