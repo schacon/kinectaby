@@ -32,6 +32,7 @@ API
     context.shutdown
 
     device = context.open_device(0)
+    device.set_led(Kinectaby::LED_RED)
     device.close
 
 CONTRIBUTING
