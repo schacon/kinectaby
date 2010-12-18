@@ -1,5 +1,7 @@
 require File.expand_path "../test_helper", __FILE__
 
+# these tests basically all require a single kinect conntected
+
 context "Kinectaby::Context stuff" do
   setup do
     @context = Kinectaby::Context.new
@@ -27,6 +29,14 @@ context "Kinectaby::Context stuff" do
     assert_raise RuntimeError do
       device = @context.open_device(1)
     end
+  end
+
+  test "set led" do
+    device = @context.open_device(0)
+    device.set_led(Kinectaby::LED_RED)
+    device.set_led(Kinectaby::LED_BLINK_RED_YELLOW)
+    device.set_led(Kinectaby::LED_GREEN)
+    device.set_led(Kinectaby::LED_OFF)
   end
 
 end

@@ -86,6 +86,14 @@ static VALUE rb_freenect_device_close(VALUE self)
 	return Qtrue;
 }
 
+static VALUE rb_freenect_device_set_led(VALUE self, VALUE led)
+{
+	freenect_device *device;
+	Data_Get_Struct(self, freenect_device, device);
+
+	return INT2FIX(freenect_set_led(device, FIX2INT(led)));
+}
+
 
 void Init_kinectaby()
 {
@@ -105,6 +113,7 @@ void Init_kinectaby()
 	 * Device
 	 */
 	rb_cKinectabyDevice = rb_define_class_under(rb_mKinectaby, "Device", rb_cObject);
+	rb_define_method(rb_cKinectabyDevice, "set_led", rb_freenect_device_set_led, 1);
 	rb_define_method(rb_cKinectabyDevice, "close", rb_freenect_device_close, 0);
 
 	/* Constants */

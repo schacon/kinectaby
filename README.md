@@ -31,6 +31,9 @@ API
     context.num_devices
     context.shutdown
 
+    device = context.open_device(0)
+    device.close
+
 CONTRIBUTING
 ==============
 
