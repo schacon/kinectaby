@@ -25,7 +25,11 @@ Then you need to get and compile this.
 API 
 ==============
 
-Hm.
+    require 'kinectaby'
+
+    context = Kinectaby::Context.new
+    context.num_devices
+    context.shutdown
 
 CONTRIBUTING
 ==============
