@@ -37,6 +37,16 @@ context "Kinectaby::Context stuff" do
     device.set_led(Kinectaby::LED_BLINK_RED_YELLOW)
     device.set_led(Kinectaby::LED_GREEN)
     device.set_led(Kinectaby::LED_OFF)
+    device.close
+  end
+
+  test "set tilt" do
+    device = @context.open_device(0)
+    device.set_tilt_degrees(5)
+    sleep 1
+    assert_equal 0, device.set_tilt_degrees(0)
+    sleep 1
+    device.close
   end
 
 end
