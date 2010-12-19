@@ -20,6 +20,12 @@ context "Kinectaby::Context stuff" do
     assert_equal 6, Kinectaby::LED_BLINK_RED_YELLOW
   end
 
+  test "Get first device" do
+    device = Kinectaby.device
+    assert device
+    device.close
+  end
+
   test "Get a device" do
     device = @context.open_device(0)
     device.close
@@ -32,19 +38,19 @@ context "Kinectaby::Context stuff" do
   end
 
   test "set led" do
-    device = @context.open_device(0)
+    device = Kinectaby.device
     device.set_led(Kinectaby::LED_RED)
     device.set_led(Kinectaby::LED_BLINK_RED_YELLOW)
-    device.set_led(Kinectaby::LED_GREEN)
-    device.set_led(Kinectaby::LED_OFF)
+    device.led = Kinectaby::LED_GREEN
+    device.led = Kinectaby::LED_OFF
     device.close
   end
 
   test "set tilt" do
-    device = @context.open_device(0)
-    device.set_tilt_degrees(5)
+    device = Kinectaby.device
+    device.tilt = 5
     sleep 1
-    assert_equal 0, device.set_tilt_degrees(0)
+    assert_equal 0, device.tilt = 0
     sleep 1
     device.close
   end
