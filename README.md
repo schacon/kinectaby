@@ -35,7 +35,7 @@ API
     # OR #
     device = Kinectaby.device  # will just get the first one
     device.led = Kinectaby::LED_RED
-    device.tilt = 30 # degree tilt, from -30 to 35
+    device.tilt = 30 # degree tilt, from -30 to 30
     device.close
 
 CONTRIBUTING

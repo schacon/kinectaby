@@ -116,6 +116,12 @@ void Init_kinectaby()
 	rb_define_method(rb_cKinectabyContext, "num_devices", rb_freenect_context_num_devices, 0);
 	rb_define_method(rb_cKinectabyContext, "open_device", rb_freenect_context_open_device, 1);
 	rb_define_method(rb_cKinectabyContext, "shutdown", rb_freenect_context_shutdown, 0);
+  /* TODO 
+	 * - set_log_level
+	 * - set_log_callback
+	 * - process_events
+	 * */
+
 
 	/*
 	 * Device
@@ -124,6 +130,26 @@ void Init_kinectaby()
 	rb_define_method(rb_cKinectabyDevice, "set_led", rb_freenect_device_set_led, 1);
 	rb_define_method(rb_cKinectabyDevice, "set_tilt_degrees", rb_freenect_device_set_tilt_degrees, 1);
 	rb_define_method(rb_cKinectabyDevice, "close", rb_freenect_device_close, 0);
+  /* TODO 
+	 * - set_user (?)
+	 * - get_user (?)
+	 *
+	 * - set_depth_callback
+	 * - set_depth_format
+	 * - set_depth_buffer
+	 * - start_depth
+	 * - stop_depth
+	 *
+	 * - set_video_callback
+	 * - set_video_format
+	 * - set_video_buffer
+	 * - start_video
+	 * - stop_video
+	 *
+	 * - update_tilt_state
+	 * - get_tilt_state
+	 * - get_mks_accel
+	 * */
 
 	/* Constants */
 	rb_define_const(rb_mKinectaby, "LED_OFF", INT2FIX(LED_OFF));
@@ -133,5 +159,35 @@ void Init_kinectaby()
 	rb_define_const(rb_mKinectaby, "LED_BLINK_YELLOW", INT2FIX(LED_BLINK_YELLOW));
 	rb_define_const(rb_mKinectaby, "LED_BLINK_GREEN", INT2FIX(LED_BLINK_GREEN));
 	rb_define_const(rb_mKinectaby, "LED_BLINK_RED_YELLOW", INT2FIX(LED_BLINK_RED_YELLOW));
+
+	/* Log Levels */
+	rb_define_const(rb_mKinectaby, "LOG_FATAL",   INT2FIX(FREENECT_LOG_FATAL));
+	rb_define_const(rb_mKinectaby, "LOG_ERROR",   INT2FIX(FREENECT_LOG_ERROR));
+	rb_define_const(rb_mKinectaby, "LOG_WARNING", INT2FIX(FREENECT_LOG_WARNING));
+	rb_define_const(rb_mKinectaby, "LOG_NOTICE",  INT2FIX(FREENECT_LOG_NOTICE));
+	rb_define_const(rb_mKinectaby, "LOG_INFO",    INT2FIX(FREENECT_LOG_INFO));
+	rb_define_const(rb_mKinectaby, "LOG_DEBUG",   INT2FIX(FREENECT_LOG_DEBUG));
+	rb_define_const(rb_mKinectaby, "LOG_SPEW",    INT2FIX(FREENECT_LOG_SPEW));
+	rb_define_const(rb_mKinectaby, "LOG_FLOOD",   INT2FIX(FREENECT_LOG_FLOOD));
+
+	/* Depth Data Types */
+	rb_define_const(rb_mKinectaby, "DEPTH_11BIT",   INT2FIX(FREENECT_DEPTH_11BIT));
+	rb_define_const(rb_mKinectaby, "DEPTH_10BIT",   INT2FIX(FREENECT_DEPTH_10BIT));
+	rb_define_const(rb_mKinectaby, "DEPTH_11BIT_PACKED",   INT2FIX(FREENECT_DEPTH_11BIT_PACKED));
+	rb_define_const(rb_mKinectaby, "DEPTH_10BIT_PACKED",   INT2FIX(FREENECT_DEPTH_10BIT_PACKED));
+
+	/* Video Data Types */
+	rb_define_const(rb_mKinectaby, "VIDEO_RGB",   INT2FIX(FREENECT_VIDEO_RGB));
+	rb_define_const(rb_mKinectaby, "VIDEO_BAYER",   INT2FIX(FREENECT_VIDEO_BAYER));
+	rb_define_const(rb_mKinectaby, "VIDEO_IR_8BIT",   INT2FIX(FREENECT_VIDEO_IR_8BIT));
+	rb_define_const(rb_mKinectaby, "VIDEO_IR_10BIT",   INT2FIX(FREENECT_VIDEO_IR_10BIT));
+	rb_define_const(rb_mKinectaby, "VIDEO_IR_10BIT_PACKED",   INT2FIX(FREENECT_VIDEO_IR_10BIT_PACKED));
+	rb_define_const(rb_mKinectaby, "VIDEO_IR_YUV_RGB",   INT2FIX(FREENECT_VIDEO_YUV_RGB));
+	rb_define_const(rb_mKinectaby, "VIDEO_IR_YUV_RAW",   INT2FIX(FREENECT_VIDEO_YUV_RAW));
+
+	rb_define_const(rb_mKinectaby, "TILT_STOPPED", INT2FIX(TILT_STATUS_STOPPED));
+	rb_define_const(rb_mKinectaby, "TILT_LIMIT",   INT2FIX(TILT_STATUS_LIMIT));
+	rb_define_const(rb_mKinectaby, "TILT_MOVING",  INT2FIX(TILT_STATUS_MOVING));
+
 }
 
