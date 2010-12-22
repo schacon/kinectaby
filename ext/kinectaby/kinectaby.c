@@ -2,11 +2,20 @@
 #include <assert.h>
 
 #include "libfreenect.h"
+#include "libfreenect/libfreenect_sync.h"
 
 static VALUE rb_mKinectaby;
 
 static VALUE rb_cKinectabyContext;
 static VALUE rb_cKinectabyDevice;
+static VALUE rb_cKinectabyFrame;
+
+/* Struct for Frame data */
+
+typedef struct {
+	short frame[480][640];
+} kinectaby_frame;
+
 
 /*
  * Kinectaby Context
@@ -102,11 +111,97 @@ static VALUE rb_freenect_device_set_tilt_degrees(VALUE self, VALUE tilt)
 	return INT2FIX(freenect_set_tilt_degs(device, FIX2INT(tilt)));
 }
 
+static VALUE rb_freenect_sync_get_video(VALUE self, VALUE frame)
+{
+	int *rgb = 0;
+	uint32_t ts;
+	int error;
+
+	error = freenect_sync_get_video((void**)&rgb, &ts, 0, FREENECT_DEPTH_11BIT);
+	if(error > 0)
+		rb_raise(rb_eRuntimeError, "freenect video capture failed");
+
+	kinectaby_frame *kframe;
+	Data_Get_Struct(frame, kinectaby_frame, kframe);
+
+	int i,j;
+	for (i = 0; i < 480; i++) {
+		for (j = 0; j < 640; j++) {
+			kframe->frame[i][j] = rgb[j*640+i];
+		}
+	}
+	return Qtrue;
+}
+
+static VALUE rb_freenect_sync_get_depth(VALUE self, VALUE frame)
+{
+	short *depth = 0;
+	uint32_t ts;
+	int error;
+
+	error = freenect_sync_get_depth((void**)&depth, &ts, 0, FREENECT_DEPTH_11BIT);
+	if(error > 0)
+		rb_raise(rb_eRuntimeError, "freenect depth capture failed");
+
+	kinectaby_frame *kframe;
+	Data_Get_Struct(frame, kinectaby_frame, kframe);
+
+	int i,j;
+	for (i = 0; i < 480; i++) {
+		for (j = 0; j < 640; j++) {
+			kframe->frame[i][j] = depth[j*640+i];
+		}
+	}
+	return Qtrue;
+}
+
+/*
+ * Kinectaby Frame (640x480)
+ */
+static VALUE rb_kinectaby_frame_allocate(VALUE klass)
+{
+	kinectaby_frame *frame = NULL;
+
+	frame = malloc(sizeof(kinectaby_frame));
+	if (frame == NULL)
+		rb_raise(rb_eNoMemError, "out of memory");
+
+	return Data_Wrap_Struct(klass, NULL, NULL, frame);
+}
+
+static VALUE rb_kinectaby_frame_init(VALUE self)
+{
+	kinectaby_frame *frame;
+	Data_Get_Struct(self, kinectaby_frame, frame);
+
+	printf("initing\n");
+
+	int i,j;
+	for (i = 0; i < 480; i++) {
+		for (j = 0; j < 640; j++) {
+			frame->frame[i][j] = 0;
+		}
+	}
+
+	return Qnil;
+}
+
+static VALUE rb_kinectaby_frame_point(VALUE self, VALUE x, VALUE y)
+{
+	short point;
+	kinectaby_frame *kframe;
+	Data_Get_Struct(self, kinectaby_frame, kframe);
+	point = kframe->frame[FIX2INT(x)][FIX2INT(y)];
+	return INT2FIX(point);
+}
+
 
 void Init_kinectaby()
 {
 	rb_mKinectaby = rb_define_module("Kinectaby");
 
+	rb_define_module_function(rb_mKinectaby, "get_video", rb_freenect_sync_get_video, 1);
+	rb_define_module_function(rb_mKinectaby, "get_depth", rb_freenect_sync_get_depth, 1);
 	/*
 	 * Context
 	 */
@@ -130,6 +225,7 @@ void Init_kinectaby()
 	rb_define_method(rb_cKinectabyDevice, "set_led", rb_freenect_device_set_led, 1);
 	rb_define_method(rb_cKinectabyDevice, "set_tilt_degrees", rb_freenect_device_set_tilt_degrees, 1);
 	rb_define_method(rb_cKinectabyDevice, "close", rb_freenect_device_close, 0);
+
   /* TODO 
 	 * - set_user (?)
 	 * - get_user (?)
@@ -150,6 +246,11 @@ void Init_kinectaby()
 	 * - get_tilt_state
 	 * - get_mks_accel
 	 * */
+
+	rb_cKinectabyFrame = rb_define_class_under(rb_mKinectaby, "Frame", rb_cObject);
+	rb_define_alloc_func(rb_cKinectabyFrame, rb_kinectaby_frame_allocate);
+	rb_define_method(rb_cKinectabyFrame, "initialize", rb_kinectaby_frame_init, 0);
+	rb_define_method(rb_cKinectabyFrame, "point", rb_kinectaby_frame_point, 2);
 
 	/* Constants */
 	rb_define_const(rb_mKinectaby, "LED_OFF", INT2FIX(LED_OFF));
