@@ -13,7 +13,7 @@ static VALUE rb_cKinectabyFrame;
 /* Struct for Frame data */
 
 typedef struct {
-	short frame[480][640];
+	short frame[640][480];
 } kinectaby_frame;
 
 
@@ -125,8 +125,8 @@ static VALUE rb_freenect_sync_get_video(VALUE self, VALUE frame)
 	Data_Get_Struct(frame, kinectaby_frame, kframe);
 
 	int i,j;
-	for (i = 0; i < 480; i++) {
-		for (j = 0; j < 640; j++) {
+	for (i = 0; i < 640; i++) {
+		for (j = 0; j < 480; j++) {
 			kframe->frame[i][j] = rgb[j*640+i];
 		}
 	}
@@ -147,8 +147,8 @@ static VALUE rb_freenect_sync_get_depth(VALUE self, VALUE frame)
 	Data_Get_Struct(frame, kinectaby_frame, kframe);
 
 	int i,j;
-	for (i = 0; i < 480; i++) {
-		for (j = 0; j < 640; j++) {
+	for (i = 0; i < 640; i++) {
+		for (j = 0; j < 480; j++) {
 			kframe->frame[i][j] = depth[j*640+i];
 		}
 	}
@@ -175,8 +175,8 @@ static VALUE rb_kinectaby_frame_init(VALUE self)
 	Data_Get_Struct(self, kinectaby_frame, frame);
 
 	int i,j;
-	for (i = 0; i < 480; i++) {
-		for (j = 0; j < 640; j++) {
+	for (i = 0; i < 640; i++) {
+		for (j = 0; j < 480; j++) {
 			frame->frame[i][j] = 0;
 		}
 	}
@@ -191,7 +191,7 @@ static VALUE rb_kinectaby_frame_point(VALUE self, VALUE x, VALUE y)
 	Data_Get_Struct(self, kinectaby_frame, kframe);
 	// TODO: assert that y <= 480
 	//       and x <= 640
-	point = kframe->frame[FIX2INT(y)][FIX2INT(x)];
+	point = kframe->frame[FIX2INT(x)][FIX2INT(y)];
 	return INT2FIX(point);
 }
 
@@ -226,7 +226,7 @@ void Init_kinectaby()
 	rb_define_method(rb_cKinectabyDevice, "set_tilt_degrees", rb_freenect_device_set_tilt_degrees, 1);
 	rb_define_method(rb_cKinectabyDevice, "close", rb_freenect_device_close, 0);
 
-  /* TODO 
+  /* TODO : async bindings
 	 * - set_user (?)
 	 * - get_user (?)
 	 *
