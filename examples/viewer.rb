@@ -35,39 +35,11 @@ display = lambda do
       c = $frame.point(i, j).to_f
       c = 2047.0 if c > 2047
       c = 0.0 if c < 0
-
-      red   = 0.0
-      green = 0.0
-      blue  = 0.0
-      div   = 683.0
-
-      if c > div
-        red = c
-        c = c - div
-      else
-        red = c / div
-        c = 0.0
-      end
-
-      if c > div
-        red = 0.0
-        green = c
-        c = c - div
-      else
-        green = c / div
-        c = 0.0
-      end
-
-      if c > 0.0
-        red = 0.0
-        green = 0.0
-        blue = c / div
-      end
-
-      glColor4fv([red, green, blue, 1.0]);
+      c = c / 2047.0
+      glColor4fv([c, c/2, c/3, 1.0])
       x = (i.to_f / 320.0) - 1.0
       y = (j.to_f / 240.0) - 1.0
-      glVertex3f(x, -y, 0.0);
+      glVertex3f(x, -y, c)
     end
   end
 

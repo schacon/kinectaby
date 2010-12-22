@@ -53,12 +53,37 @@ API
       puts frame.point(x, y)
     end
 
+OUTPUT
+==============
+
+I'm still playing with the values I'm getting back (sorry, I'm kind of new at this), 
+but for now the get_depth() call returns a frame with 640x480 data points, each an
+11 bit value (0 to 2047, where 0 is far away and 2047 is close to the camera).
+
+example output from the examples/viewer.rb opengl ruby script looking at the depth data:
+
+<img src="https://img.skitch.com/20101222-csk8jrt3appq2refxtnk3trc6u.jpg">
+
+That opengl script is horribly slow, once I figure out what kind of data I need from each
+frame, I can do it in C and process them a lot faster.
+
+I'm still playing with the video data, but it's similar.  It returns a 32-bit RGB integer
+value, I believe.  I'll try to get an example gl script to show that off too.
+
+TODO
+==============
+
+So for now only syncronous data capture is possible - eventually I would like to get the
+async callbacks implemented as well.  There are also some log calls and a log callback 
+that should be bound.  Finally, there is tilt and accelerometer data you can capture that
+we should be able to get.  I've marked all the calls I haven't bound as 'TODO' in the 
+kinectaby.c file.  Eventually I should probably also split that out into seperate files.
+
 CONTRIBUTING
 ==============
 
 Fork schacon/kinectaby on GitHub, make it awesomer (preferably in a branch named
 for the topic), send me a pull request.
-
 
 AUTHORS 
 ==============
