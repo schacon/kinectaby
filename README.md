@@ -62,6 +62,10 @@ but for now the get_depth() call returns a frame with 640x480 data points, each 
 
 example output from the examples/viewer.rb opengl ruby script looking at the depth data:
 
+<img src="https://img.skitch.com/20101222-ctrtp9ihkyt19rpxygpqrsh98f.jpg">
+
+and this is how to properly mount the device for optimal image capture:
+
 <img src="https://img.skitch.com/20101222-csk8jrt3appq2refxtnk3trc6u.jpg">
 
 That opengl script is horribly slow, once I figure out what kind of data I need from each
