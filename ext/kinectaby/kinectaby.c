@@ -174,8 +174,6 @@ static VALUE rb_kinectaby_frame_init(VALUE self)
 	kinectaby_frame *frame;
 	Data_Get_Struct(self, kinectaby_frame, frame);
 
-	printf("initing\n");
-
 	int i,j;
 	for (i = 0; i < 480; i++) {
 		for (j = 0; j < 640; j++) {
@@ -191,7 +189,9 @@ static VALUE rb_kinectaby_frame_point(VALUE self, VALUE x, VALUE y)
 	short point;
 	kinectaby_frame *kframe;
 	Data_Get_Struct(self, kinectaby_frame, kframe);
-	point = kframe->frame[FIX2INT(x)][FIX2INT(y)];
+	// TODO: assert that y <= 480
+	//       and x <= 640
+	point = kframe->frame[FIX2INT(y)][FIX2INT(x)];
 	return INT2FIX(point);
 }
 

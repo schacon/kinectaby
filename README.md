@@ -38,6 +38,21 @@ API
     device.tilt = 30 # degree tilt, from -30 to 30
     device.close
 
+    # syncronous video/depth capture (i can get about 30fps)
+
+    dframe = Kinectaby::Frame.new
+    vframe = Kinectaby::Frame.new
+
+    while true do
+      puts "depth"
+      Kinectaby.get_depth(dframe)
+      puts frame.point(x, y)
+
+      puts "video"
+      Kinectaby.get_video(vframe)
+      puts frame.point(x, y)
+    end
+
 CONTRIBUTING
 ==============
 
