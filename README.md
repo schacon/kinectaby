@@ -58,7 +58,7 @@ OUTPUT
 
 I'm still playing with the values I'm getting back (sorry, I'm kind of new at this), 
 but for now the get_depth() call returns a frame with 640x480 data points, each an
-11 bit value (0 to 2047, where 0 is far away and 2047 is close to the camera).
+11 bit value (0 to 2047, where 2047 is far away and 0 is close to the camera).
 
 example output from the examples/viewer.rb opengl ruby script looking at the depth data:
 
