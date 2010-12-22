@@ -38,7 +38,7 @@ API
     device.tilt = 30 # degree tilt, from -30 to 30
     device.close
 
-    # syncronous video/depth capture (i can get about 30fps)
+    # synchronous video/depth capture (i can get about 30fps)
 
     dframe = Kinectaby::Frame.new
     vframe = Kinectaby::Frame.new
@@ -46,7 +46,7 @@ API
     while true do
       puts "depth"
       Kinectaby.get_depth(dframe)
-      puts frame.point(x, y)
+      puts frame.point(x, y) # 0 to 2047
 
       puts "video"
       Kinectaby.get_video(vframe)
@@ -66,7 +66,7 @@ example output from the examples/viewer.rb opengl ruby script looking at the dep
 
 and this is how to properly mount the device for optimal image capture:
 
-<img src="https://img.skitch.com/20101222-csk8jrt3appq2refxtnk3trc6u.jpg">
+<img width="400px" src="https://img.skitch.com/20101222-csk8jrt3appq2refxtnk3trc6u.jpg">
 
 That opengl script is horribly slow, once I figure out what kind of data I need from each
 frame, I can do it in C and process them a lot faster.
@@ -77,7 +77,7 @@ value, I believe.  I'll try to get an example gl script to show that off too.
 TODO
 ==============
 
-So for now only syncronous data capture is possible - eventually I would like to get the
+So for now only synchronous data capture is possible - eventually I would like to get the
 async callbacks implemented as well.  There are also some log calls and a log callback 
 that should be bound.  Finally, there is tilt and accelerometer data you can capture that
 we should be able to get.  I've marked all the calls I haven't bound as 'TODO' in the 
