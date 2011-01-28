@@ -195,6 +195,33 @@ static VALUE rb_kinectaby_frame_point(VALUE self, VALUE x, VALUE y)
 	return INT2FIX(point);
 }
 
+static VALUE rb_kinectaby_frame_hand(VALUE self, VALUE x, VALUE y)
+{
+	short point;
+	kinectaby_frame *kframe;
+	Data_Get_Struct(self, kinectaby_frame, kframe);
+
+	int i,j,d;
+	int min_depth = 2048;
+	int px, py = 0;
+	for (i = 0; i < 640; i++) {
+		for (j = 0; j < 480; j++) {
+			d = kframe->frame[i][j];
+			if (d < min_depth) {
+				min_depth = d;
+				px = i;
+				py = j;
+			}
+		}
+	}
+	VALUE rary;
+	rary = rb_ary_new();
+	rb_ary_push(rary, INT2FIX(px));
+	rb_ary_push(rary, INT2FIX(py));
+	rb_ary_push(rary, INT2FIX(min_depth));
+	return rary;
+}
+
 
 void Init_kinectaby()
 {
@@ -251,6 +278,7 @@ void Init_kinectaby()
 	rb_define_alloc_func(rb_cKinectabyFrame, rb_kinectaby_frame_allocate);
 	rb_define_method(rb_cKinectabyFrame, "initialize", rb_kinectaby_frame_init, 0);
 	rb_define_method(rb_cKinectabyFrame, "point", rb_kinectaby_frame_point, 2);
+	rb_define_method(rb_cKinectabyFrame, "hand", rb_kinectaby_frame_hand, 0);
 
 	/* Constants */
 	rb_define_const(rb_mKinectaby, "LED_OFF", INT2FIX(LED_OFF));
